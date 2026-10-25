@@ -69,7 +69,6 @@ function bindEvents() {
   document.getElementById('btn-accept').addEventListener('click', acceptCharacter);
   document.getElementById('btn-pause').addEventListener('click', togglePause);
   document.getElementById('btn-close-offline').addEventListener('click', () => ui.hideModal('offline-modal'));
-  document.getElementById('btn-enter-comp').addEventListener('click', onEnterComp);
   document.getElementById('btn-delete-save').addEventListener('click', onDeleteSave);
   document.getElementById('btn-export-save').addEventListener('click', onExportSave);
   document.getElementById('btn-import-save').addEventListener('click', () => document.getElementById('import-file').click());
@@ -83,7 +82,16 @@ function bindEvents() {
       tab.classList.add('active');
       const pane = document.getElementById('tab-' + tab.dataset.tab);
       if (pane) pane.classList.add('active');
-      if (tab.dataset.tab === 'schedule' && sim) ui.updateSchedule(sim);
+      if (!sim) return;
+      if (tab.dataset.tab === 'schedule') ui.updateSchedule(sim);
+      if (tab.dataset.tab === 'skills') ui.updateSkills(sim);
+      if (tab.dataset.tab === 'gear') ui.updateGear(sim);
+      if (tab.dataset.tab === 'social') ui.updateSocial(sim);
+      if (tab.dataset.tab === 'career') ui.updateCareer(sim);
+      if (tab.dataset.tab === 'training') ui.updateTraining(sim);
+      if (tab.dataset.tab === 'finance') ui.updateFinance(sim);
+      if (tab.dataset.tab === 'diary') ui.updateDiary(sim);
+      if (tab.dataset.tab === 'overview') ui.updateOverview(sim);
     });
   });
 
@@ -265,20 +273,6 @@ async function doSave() {
 }
 
 // ---------- Competition ----------
-async function onEnterComp() {
-  if (!sim) return;
-  const result = sim.enterLocalCompetition();
-  if (!result.ok) {
-    ui.toast(result.msg || 'Não foi possível se inscrever.');
-    return;
-  }
-  await ui.showEvent(
-    'Campeonato Local',
-    `Total: ${result.total} kg\nColocação: ${result.place}º lugar${result.prize ? `\nPrêmio: R$ ${result.prize}` : ''}`
-  );
-  ui.updateAllPanels(sim);
-  await doSave();
-}
 
 // ---------- Settings helpers ----------
 async function onDeleteSave() {
