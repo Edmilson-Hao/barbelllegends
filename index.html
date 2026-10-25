@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Barbell Legends: Iron Empire - Idle RPG de Powerlifting">
+  <title>Barbell Legends: Iron Empire</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div id="app">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen active">
+      <div class="loading-content">
+        <div class="logo-pixel">
+          <pre class="pixel-logo">BARBELL
+LEGENDS</pre>
+        </div>
+        <p class="subtitle">IRON EMPIRE</p>
+        <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+        <p id="loading-text">Carregando...</p>
+      </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen">
+      <div class="menu-bg">
+        <canvas id="menu-canvas" width="320" height="180"></canvas>
+      </div>
+      <div class="menu-content">
+        <h1 class="game-title">BARBELL LEGENDS</h1>
+        <h2 class="game-subtitle">IRON EMPIRE</h2>
+        <div class="menu-buttons">
+          <button id="btn-new-career" class="btn btn-primary">Nova Carreira</button>
+          <button id="btn-continue" class="btn btn-secondary" disabled>Continuar</button>
+          <button id="btn-settings" class="btn btn-secondary">Configurações</button>
+        </div>
+        <p class="version">v0.1.0 MVP · Vanilla JS</p>
+      </div>
+    </div>
+
+    <!-- Character Generation -->
+    <div id="char-gen" class="screen">
+      <div class="panel char-gen-panel">
+        <h2>Nova Carreira</h2>
+        <div class="char-preview">
+          <canvas id="char-canvas" width="96" height="128"></canvas>
+          <div class="char-info" id="char-info">
+            <p class="char-name">Gerando...</p>
+          </div>
+        </div>
+        <div class="char-story" id="char-story"></div>
+        <div class="char-stats" id="char-stats"></div>
+        <div class="char-actions">
+          <button id="btn-reroll" class="btn btn-secondary">Gerar Outro</button>
+          <button id="btn-accept" class="btn btn-primary">Aceitar e Começar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <header class="game-header">
+        <div class="header-left">
+          <span id="game-date" class="date">Seg, 01 Jan 2026</span>
+          <span id="game-time" class="time">08:00</span>
+        </div>
+        <div class="header-center">
+          <span id="current-activity" class="activity">Acordando...</span>
+        </div>
+        <div class="header-right">
+          <span id="money-display" class="money">R$ 0</span>
+          <button id="btn-pause" class="btn-icon" title="Pausar">⏸</button>
+        </div>
+      </header>
+
+      <main class="game-main">
+        <div class="scene-container">
+          <canvas id="game-canvas" width="320" height="180"></canvas>
+          <div class="scene-overlay">
+            <div class="status-bars">
+              <div class="bar-item" title="Energia">
+                <span class="bar-label">⚡</span>
+                <div class="bar"><div id="bar-energy" class="bar-fill energy"></div></div>
+              </div>
+              <div class="bar-item" title="Fadiga">
+                <span class="bar-label">💪</span>
+                <div class="bar"><div id="bar-fatigue" class="bar-fill fatigue"></div></div>
+              </div>
+              <div class="bar-item" title="Humor">
+                <span class="bar-label">😊</span>
+                <div class="bar"><div id="bar-mood" class="bar-fill mood"></div></div>
+              </div>
+              <div class="bar-item" title="Sono">
+                <span class="bar-label">😴</span>
+                <div class="bar"><div id="bar-sleep" class="bar-fill sleep"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="tabs">
+            <button class="tab active" data-tab="overview">Visão</button>
+            <button class="tab" data-tab="schedule">Agenda</button>
+            <button class="tab" data-tab="training">Treino</button>
+            <button class="tab" data-tab="career">Carreira</button>
+            <button class="tab" data-tab="finance">Finanças</button>
+            <button class="tab" data-tab="diary">Diário</button>
+          </div>
+          <div class="tab-content">
+            <!-- Overview -->
+            <div id="tab-overview" class="tab-pane active">
+              <div class="char-summary" id="overview-summary"></div>
+              <div class="lifts-summary" id="lifts-summary"></div>
+              <div class="quick-stats" id="quick-stats"></div>
+            </div>
+            <!-- Schedule -->
+            <div id="tab-schedule" class="tab-pane">
+              <div class="schedule-grid" id="schedule-grid"></div>
+              <div class="priority-controls">
+                <h4>Prioridades</h4>
+                <div class="priority-sliders" id="priority-sliders"></div>
+              </div>
+            </div>
+            <!-- Training -->
+            <div id="tab-training" class="tab-pane">
+              <div class="training-info" id="training-info"></div>
+              <div class="program-select">
+                <label>Programa:</label>
+                <select id="program-select">
+                  <option value="linear">Linear Básico</option>
+                  <option value="fullbody">Full Body</option>
+                  <option value="upperlower">Upper/Lower</option>
+                </select>
+              </div>
+              <div class="lifts-detail" id="lifts-detail"></div>
+            </div>
+            <!-- Career -->
+            <div id="tab-career" class="tab-pane">
+              <div class="job-info" id="job-info"></div>
+              <div class="education-info" id="education-info"></div>
+              <div class="comp-info" id="comp-info"></div>
+              <button id="btn-enter-comp" class="btn btn-primary" style="display:none">Inscrever-se na Competição Local</button>
+            </div>
+            <!-- Finance -->
+            <div id="tab-finance" class="tab-pane">
+              <div class="finance-summary" id="finance-summary"></div>
+              <div class="finance-log" id="finance-log"></div>
+            </div>
+            <!-- Diary -->
+            <div id="tab-diary" class="tab-pane">
+              <div class="diary-list" id="diary-list"></div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <nav class="bottom-nav">
+        <button class="nav-btn active" data-view="scene">Cena</button>
+        <button class="nav-btn" data-view="stats">Stats</button>
+        <button class="nav-btn" data-view="menu">Menu</button>
+      </nav>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <h3>Configurações</h3>
+        <div class="setting-row">
+          <label>Velocidade do Tempo</label>
+          <select id="time-speed">
+            <option value="1">1x (1h real = 7 dias)</option>
+            <option value="2">2x</option>
+            <option value="4">4x</option>
+            <option value="0.5">0.5x</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label>Música</label>
+          <input type="range" id="vol-music" min="0" max="100" value="30">
+        </div>
+        <div class="setting-row">
+          <label>Efeitos</label>
+          <input type="range" id="vol-sfx" min="0" max="100" value="50">
+        </div>
+        <div class="setting-row">
+          <button id="btn-export-save" class="btn btn-secondary">Exportar Save</button>
+          <button id="btn-import-save" class="btn btn-secondary">Importar Save</button>
+          <input type="file" id="import-file" accept=".json" style="display:none">
+        </div>
+        <div class="setting-row">
+          <button id="btn-delete-save" class="btn btn-danger">Apagar Save</button>
+        </div>
+        <button id="btn-close-settings" class="btn btn-primary">Fechar</button>
+      </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="event-modal" class="modal">
+      <div class="modal-content event-content">
+        <h3 id="event-title">Evento</h3>
+        <p id="event-text"></p>
+        <div id="event-choices" class="event-choices"></div>
+      </div>
+    </div>
+
+    <!-- Offline Summary Modal -->
+    <div id="offline-modal" class="modal">
+      <div class="modal-content">
+        <h3>Enquanto você estava fora...</h3>
+        <div id="offline-summary"></div>
+        <button id="btn-close-offline" class="btn btn-primary">Continuar</button>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "Barbell Legends: Iron Empire",
+  "short_name": "Iron Empire",
+  "description": "Idle RPG de Powerlifting e simulação de vida",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "orientation": "any",
+  "icons": []
+}
